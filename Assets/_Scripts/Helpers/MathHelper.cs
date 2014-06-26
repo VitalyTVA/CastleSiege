@@ -8,8 +8,10 @@ public static class MathHelper {
 			return null;
 		return new Vector2 ((-b - Mathf.Sqrt (D)) / (2 * a), (-b + Mathf.Sqrt (D)) / (2 * a));
 	}
-	public static float CalcShootAngleInRad(float distance, float speed, float gravity) {
-		return Mathf.Asin(gravity * distance / (speed * speed)) / 2;
+	public static float? CalcShootAngleInRad(float distance, float height, float speed, float gravity) {
+		float a = (gravity * distance * distance) / (2 * speed * speed);
+		var roots = SolveQuadratic (a, distance, (a + height));
+		return roots != null ? (float?)Mathf.Atan(roots.Value.Min()) : null;
 	}
 
 	public static float Min(this Vector2 vector) {
