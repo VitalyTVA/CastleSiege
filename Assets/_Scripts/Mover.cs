@@ -10,7 +10,8 @@ public class Mover : MonoBehaviour {
 		Animator animator = GetComponent<Animator> ();
 		HashIDs hash = GameObject.FindGameObjectWithTag("GameController").GetComponent<HashIDs>();
 		animator.SetFloat(hash.speedFloat, 1f);
-
+	}
+	void FixedUpdate() {
 		Vector3 targetDirection = target.transform.position - transform.position;
 		targetDirection.y = 0;
 		rigidbody.velocity = Vector3.Normalize (targetDirection) * speed;
@@ -18,8 +19,5 @@ public class Mover : MonoBehaviour {
 		Quaternion targetRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
 		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 1);
 		rigidbody.MoveRotation(newRotation);
-
 	}
-//	void FixedUpdate() {
-//	}
 }
