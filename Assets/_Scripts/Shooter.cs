@@ -20,8 +20,9 @@ public class Shooter : MonoBehaviour {
 			if(targetCollider != null) {
 				Transform target = targetCollider.gameObject.GetComponent<Target>().target.transform;
 
-				float distance = Vector3.Distance(transform.position, target.position);
-				float? angle = MathHelper.CalcShootAngleInRad(distance, transform.position.y - target.position.y, speed, Physics.gravity.y);
+				Vector3 distanceVector = transform.position - target.position;
+				distanceVector.y = 0;
+				float? angle = MathHelper.CalcShootAngleInRad(distanceVector.magnitude, transform.position.y - target.position.y, speed, Physics.gravity.y);
 				if(angle != null) {
 					GameObject shoteeInstance = (GameObject)Instantiate(shotee, transform.position, Quaternion.identity);
 
