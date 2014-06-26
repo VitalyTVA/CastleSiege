@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HitableObject : HitableObjectBase {
+public class TrollHitableObject : HitableObjectBase {
 	public override void Hit() {
 
 	}	
