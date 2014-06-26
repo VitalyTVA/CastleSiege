@@ -4,7 +4,7 @@ using System.Collections;
 
 public class Hitter : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
-		var hitable = other.GetComponents<MonoBehaviour>().OfType<IHitableObject>().FirstOrDefault();
+		var hitable = other.GetComponent<HitableObjectBase>();
 		if (hitable != null) {
 			GameObject.Destroy (gameObject);
 			hitable.Hit();

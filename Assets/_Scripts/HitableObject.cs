@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HitableObject : MonoBehaviour, IHitableObject {
-	public void Hit() {
+public class HitableObject : HitableObjectBase {
+	public override void Hit() {
 
 	}	
 }
