@@ -5,7 +5,8 @@ public class TrollController : MonoBehaviour
 {
 	public float turnSmoothing = 15f;   // A smoothing value for turning the player.
 	public float speedDampTime = 0.1f;  // The damping for the speed parameter
-	public float upSpeed = 1f;  // The damping for the speed parameter	
+	//public float upSpeed = 1f;  // The damping for the speed parameter
+	public float speedCorrection = 1f;
 	
 	private Animator anim;              // Reference to the animator component.
 	private HashIDs hash;               // Reference to the HashIDs.
@@ -41,12 +42,14 @@ public class TrollController : MonoBehaviour
 			anim.SetFloat(hash.speedFloat, 1f, speedDampTime, Time.deltaTime);
 			Vector3 targetDirection = new Vector3(horizontal, 0f, vertical);
 
-			rigidbody.AddRelativeForce(new Vector3(0, upSpeed, 0));
-			//rigidbody.MovePosition(Vector3.Lerp(rigidbody.position, rigidbody.position + targetDirection, speed * Time.deltaTime));
+			//rigidbody.AddRelativeForce(new Vector3(0, upSpeed, 0));
+			rigidbody.velocity = targetDirection * speedCorrection;
+			//rigidbody.MovePosition(Vector3.Lerp(rigidbody.position, rigidbody.position + targetDirection, upSpeed * Time.deltaTime));
 		}
 		else {
 			// Otherwise set the speed parameter to 0.
 			anim.SetFloat(hash.speedFloat, 0);
+			rigidbody.velocity = Vector3.zero;
 		}
 	}
 	
