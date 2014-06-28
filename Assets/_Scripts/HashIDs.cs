@@ -9,6 +9,7 @@ public class HashIDs : MonoBehaviour
 	public int dieState;
 	public int speedFloat;
 	public int deadBool;
+	public int onHitTrigger;
 
 	void Awake ()
 	{
@@ -18,5 +19,6 @@ public class HashIDs : MonoBehaviour
 
 		speedFloat = Animator.StringToHash("Speed");
 		deadBool = Animator.StringToHash("Dead");
+		onHitTrigger = Animator.StringToHash("OnHit");
 	}
 }
