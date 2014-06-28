@@ -15,7 +15,6 @@ public class Spawner : MonoBehaviour {
 	}
 	IEnumerator<WaitForSeconds> SpawnRoutine() {
 		while (true) {
-			yield return new WaitForSeconds (interval);
 			for (int i = 0; i < rows; i++) {
 				for (int j = 0; j < columns; j++) {
 					var position = transform.position + new Vector3(j * distance, 0, i * distance);
@@ -23,6 +22,7 @@ public class Spawner : MonoBehaviour {
 					spawneeInstance.GetComponent<Mover>().target = target;
 				}
 			}
+			yield return new WaitForSeconds (interval);
 		}
 	}
 
