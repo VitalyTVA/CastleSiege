@@ -3,11 +3,18 @@ using System.Linq;
 using System.Collections;
 
 public class Hitter : MonoBehaviour {
-	void OnTriggerEnter(Collider other) {
-		var hitable = other.GetComponent<HitableObjectBase>();
+	void OnCollisionEnter(Collision collision) {
+		var hitable = collision.gameObject.GetComponent<HitableObjectBase>();
 		if (hitable != null) {
-			GameObject.Destroy (gameObject);
 			hitable.Hit();
 		}
+		GameObject.Destroy (gameObject);
 	}
+//	void OnTriggerEnter(Collider other) {
+//		var hitable = other.GetComponent<HitableObjectBase>();
+//		if (hitable != null) {
+//			GameObject.Destroy (gameObject);
+//			hitable.Hit();
+//		}
+//	}
 }
