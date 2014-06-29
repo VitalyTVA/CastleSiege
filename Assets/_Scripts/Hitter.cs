@@ -8,6 +8,9 @@ public class Hitter : MonoBehaviour {
 		if (hitable != null) {
 			hitable.Hit();
 		}
+		Destroy();
+	}
+	protected virtual void Destroy() {
 		GameObject.Destroy (gameObject);
 	}
 //	void OnTriggerEnter(Collider other) {
