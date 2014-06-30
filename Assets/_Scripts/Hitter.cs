@@ -4,12 +4,17 @@ using System.Collections;
 
 public class Hitter : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
+//		if (!CanInteract (collision.gameObject))
+//			return;
 		var hitable = collision.gameObject.GetComponent<HitableObjectBase>();
 		if (hitable != null) {
 			hitable.Hit();
 		}
 		Destroy();
 	}
+//	protected virtual bool CanInteract(GameObject other) {
+//		return true;
+//	}
 	protected virtual void Destroy() {
 		GameObject.Destroy (gameObject);
 	}

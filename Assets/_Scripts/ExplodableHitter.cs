@@ -5,6 +5,10 @@ public class ExplodableHitter : Hitter {
 	public float explosionRadius = 5f;
 	public float explostionForce = 10f;
 	public float upwardsForce = 10f;
+//
+//	{
+//		return other.tag == "Ground";
+//	}
 	protected override void Destroy () {
 		Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 		foreach (var collider in colliders) {
