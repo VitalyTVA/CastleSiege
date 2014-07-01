@@ -5,25 +5,13 @@ using System.Collections;
 public class Hitter : MonoBehaviour {
 	public int damage = 34;
 	void OnCollisionEnter(Collision collision) {
-//		if (!CanInteract (collision.gameObject))
-//			return;
-		var hitable = collision.gameObject.GetComponent<HitableObjectBase>();
+		HitGameObject (collision.gameObject, damage);
+		GameObject.Destroy (gameObject);
+	}
+	public static void HitGameObject(GameObject gameObject, int damage) {
+		var hitable = gameObject.GetComponent<HitableObjectBase>();
 		if (hitable != null) {
 			hitable.Hit(damage);
 		}
-		Destroy();
 	}
-//	protected virtual bool CanInteract(GameObject other) {
-//		return true;
-//	}
-	protected virtual void Destroy() {
-		GameObject.Destroy (gameObject);
-	}
-//	void OnTriggerEnter(Collider other) {
-//		var hitable = other.GetComponent<HitableObjectBase>();
-//		if (hitable != null) {
-//			GameObject.Destroy (gameObject);
-//			hitable.Hit();
-//		}
-//	}
 }
