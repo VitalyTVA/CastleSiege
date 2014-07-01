@@ -4,7 +4,7 @@ using System.Collections;
 public class TrollHitableObject : HitableObjectBase {
 	Animator anim;	
 	HashIDs hash;
-	bool dead = false;
+//	bool dead = false;
 //	bool dying = false;
 
 	void Awake () {
@@ -12,17 +12,19 @@ public class TrollHitableObject : HitableObjectBase {
 		hash = GameObject.FindGameObjectWithTag("GameController").GetComponent<HashIDs>();
 	}
 	
-	public override void Hit() {
+	protected override void OnHit() {
 		//dying = true;
-		//anim.SetTrigger(hash.onHitTrigger);
+		anim.SetTrigger(hash.onHitTrigger);
 
-		if (!dead) {
-			dead = true;
+	}
+	protected override void OnDie() {
+//		if (!dead) {
+//			dead = true;
 			anim.SetTrigger (hash.onDieTrigger);
 			anim.SetFloat (hash.speedFloat, 0f);
 			GameObject.Destroy (gameObject, 1f);
-		}
-	}	
+//		}
+	}
 //	void Update ()
 //	{
 //		if (!dying)

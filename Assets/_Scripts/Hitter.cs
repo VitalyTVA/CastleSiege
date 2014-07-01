@@ -3,12 +3,13 @@ using System.Linq;
 using System.Collections;
 
 public class Hitter : MonoBehaviour {
+	public int damage = 34;
 	void OnCollisionEnter(Collision collision) {
 //		if (!CanInteract (collision.gameObject))
 //			return;
 		var hitable = collision.gameObject.GetComponent<HitableObjectBase>();
 		if (hitable != null) {
-			hitable.Hit();
+			hitable.Hit(damage);
 		}
 		Destroy();
 	}

@@ -6,7 +6,17 @@ public abstract class HitableObjectBase : MonoBehaviour  {
 	internal int health;
 	public float HealthRatio { get { return (float)health / maxHealth; } }
 	void Start() {
-		health = maxHealth / 2;
+		health = maxHealth;
 	}
-	public abstract void Hit ();
+	public void Hit (int damage) {
+		if(damage == 0 || health <= 0)
+			return;
+		health -= damage;
+		if(health > 0)
+			OnHit();
+		else
+			OnDie();
+	}
+	protected abstract void OnDie ();
+	protected abstract void OnHit ();
 }
