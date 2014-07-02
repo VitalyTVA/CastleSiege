@@ -3,16 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using UnityEngine;
 
 static class RealPolynomialRootFinder
 {
 	//Global variables that assist the computation, taken from the Visual Studio C++ compiler class float
 	// smallest such that 1.0+DBL_EPSILON != 1.0 
-	static double DBL_EPSILON = 2.22044604925031E-16;
+	static float DBL_EPSILON = 2.22044604925031E-16f;
 	// max value 
-	static double DBL_MAX = 1.79769313486232E+307;
+	static float DBL_MAX = float.MaxValue;
 	// min positive value 
-	static double DBL_MIN = 2.2250738585072E-308;
+	static float DBL_MIN = float.MinValue;
 	
 	//If needed, set the maximum allowed degree for the polynomial here:
 	
@@ -25,7 +26,7 @@ static class RealPolynomialRootFinder
 	/// <param name="Input">The coefficients for the polynomial starting with the highest degree and ends on the constant, missing degree must be implemented as a 0.</param>
 	/// <returns>All the real and complex roots that are found is returned in a list of complex numbers.</returns>
 	/// <remarks>The maximum alloed degree polynomial for this implementation is set to 100. It can only take real coefficients.</remarks>
-	public static List<Complex> FindRoots(params double[] Input)
+	public static List<Complex> FindRoots(params float[] Input)
 	{
 		List<Complex> result = new List<Complex>();
 		
@@ -43,49 +44,49 @@ static class RealPolynomialRootFinder
 		//Actual degree calculated from the imtems in the Input ParamArray
 		int Degree = Input.Length - 1;
 		
-		double[] op = new double[Max_Degree_Helper + 1];
-		double[] K = new double[Max_Degree_Helper + 1];
-		double[] p = new double[Max_Degree_Helper + 1];
-		double[] pt = new double[Max_Degree_Helper + 1];
-		double[] qp = new double[Max_Degree_Helper + 1];
-		double[] temp = new double[Max_Degree_Helper + 1];
-		double[] zeror = new double[Max_Degree_Helper + 1];
-		double[] zeroi = new double[Max_Degree_Polynomial + 1];
-		double bnd = 0;
-		double df = 0;
-		double dx = 0;
-		double ff = 0;
-		double moduli_max = 0;
-		double moduli_min = 0;
-		double x = 0;
-		double xm = 0;
-		double aa = 0;
-		double bb = 0;
-		double cc = 0;
-		double lzi = 0;
-		double lzr = 0;
-		double sr = 0;
-		double szi = 0;
-		double szr = 0;
-		double t = 0;
-		double u = 0;
-		double xx = 0;
-		double xxx = 0;
-		double yy = 0;
+		float[] op = new float[Max_Degree_Helper + 1];
+		float[] K = new float[Max_Degree_Helper + 1];
+		float[] p = new float[Max_Degree_Helper + 1];
+		float[] pt = new float[Max_Degree_Helper + 1];
+		float[] qp = new float[Max_Degree_Helper + 1];
+		float[] temp = new float[Max_Degree_Helper + 1];
+		float[] zeror = new float[Max_Degree_Helper + 1];
+		float[] zeroi = new float[Max_Degree_Polynomial + 1];
+		float bnd = 0;
+		float df = 0;
+		float dx = 0;
+		float ff = 0;
+		float moduli_max = 0;
+		float moduli_min = 0;
+		float x = 0;
+		float xm = 0;
+		float aa = 0;
+		float bb = 0;
+		float cc = 0;
+		float lzi = 0;
+		float lzr = 0;
+		float sr = 0;
+		float szi = 0;
+		float szr = 0;
+		float t = 0;
+		float u = 0;
+		float xx = 0;
+		float xxx = 0;
+		float yy = 0;
 		
 		// These are used to scale the polynomial for more accurecy
-		double factor = 0;
-		double sc = 0;
+		float factor = 0;
+		float sc = 0;
 		
-		double RADFAC = 3.14159265358979 / 180;
+		float RADFAC = 3.14159265358979f / 180;
 		// Degrees-to-radians conversion factor = pi/180
-		double lb2 = Math.Log(2.0);
+		float lb2 = Mathf.Log(2.0f);
 		// Dummy variable to avoid re-calculating this value in loop below
-		double lo = DBL_MIN / DBL_EPSILON;
-		//Double.MinValue / Double.Epsilon
-		double cosr = Math.Cos(94.0 * RADFAC);
+		float lo = DBL_MIN / DBL_EPSILON;
+		//float.MinValue / float.Epsilon
+		float cosr = Mathf.Cos(94.0f * RADFAC);
 		// = -0.069756474
-		double sinr = Math.Sin(94.0 * RADFAC);
+		float sinr = Mathf.Sin(94.0f * RADFAC);
 		// = 0.99756405
 		
 		//Are the polynomial larger that the maximum allowed?
@@ -101,7 +102,7 @@ static class RealPolynomialRootFinder
 			}
 			
 			N = Degree;
-			xx = Math.Sqrt(0.5);
+			xx = Mathf.Sqrt(0.5f);
 			//= 0.70710678
 			yy = -xx;
 			
@@ -109,7 +110,7 @@ static class RealPolynomialRootFinder
 			j = 0;
 			while ((op[N] == 0)) {
 				zeror[j] = 0;
-				zeroi[j] = 0.0;
+				zeroi[j] = 0.0f;
 				N -= 1;
 				j += 1;
 			}
@@ -126,7 +127,7 @@ static class RealPolynomialRootFinder
 					if (N < 2) {
 						//1st degree polynomial
 						zeror[(Degree) - 1] = -(p[1] / p[0]);
-						zeroi[(Degree) - 1] = 0.0;
+						zeroi[(Degree) - 1] = 0.0f;
 					} else {
 						//2nd degree polynomial
 						Quad_ak1(p[0], p[1], p[2], ref zeror[((Degree) - 2)], ref zeroi[((Degree) - 2)], ref zeror[((Degree) - 1)], ref zeroi[(Degree) - 1]);
@@ -135,11 +136,11 @@ static class RealPolynomialRootFinder
 					break; // TODO: might not be correct. Was : Exit While
 				}
 				
-				moduli_max = 0.0;
+				moduli_max = 0.0f;
 				moduli_min = DBL_MAX;
 				
 				for (int i = 0; i <= NN - 1; i++) {
-					x = Math.Abs(p[i]);
+					x = Mathf.Abs(p[i]);
 					if ((x > moduli_max))
 						moduli_max = x;
 					if (((x != 0) & (x < moduli_min)))
@@ -160,9 +161,9 @@ static class RealPolynomialRootFinder
 						sc = DBL_MIN;
 					}
 					
-					l = Convert.ToInt32(Math.Log(sc) / lb2 + 0.5);
-					factor = Math.Pow(2.0, l);
-					if ((factor != 1.0)) {
+					l = Convert.ToInt32(Mathf.Log(sc) / lb2 + 0.5);
+					factor = Mathf.Pow(2.0f, l);
+					if ((factor != 1.0f)) {
 						for (int i = 0; i <= NN; i++) {
 							p[i] *= factor;
 						}
@@ -171,14 +172,14 @@ static class RealPolynomialRootFinder
 				
 				//Compute lower bound on moduli of zeros
 				for (int i = 0; i <= NN - 1; i++) {
-					pt[i] = Math.Abs(p[i]);
+					pt[i] = Mathf.Abs(p[i]);
 				}
 				pt[N] = -(pt[N]);
 				
 				NM1 = N - 1;
 				
 				// Compute upper estimate of bound
-				x = Math.Exp((Math.Log(-pt[N]) - Math.Log(pt[0])) / Convert.ToDouble(N));
+				x = Mathf.Exp((Mathf.Log(-pt[N]) - Mathf.Log(pt[0])) / Convert.ToSingle(N));
 				
 				if ((pt[NM1] != 0)) {
 					// If Newton step at the origin is better, use it
@@ -193,7 +194,7 @@ static class RealPolynomialRootFinder
 				
 				do {
 					x = xm;
-					xm = 0.1 * x;
+					xm = 0.1f * x;
 					ff = pt[0];
 					for (int i = 1; i <= NN - 1; i++) {
 						ff = ff * xm + pt[i];
@@ -212,13 +213,13 @@ static class RealPolynomialRootFinder
 					ff = x * ff + pt[N];
 					dx = ff / df;
 					x -= dx;
-				} while ((Math.Abs(dx / x) > 0.005));
+				} while ((Mathf.Abs(dx / x) > 0.005));
 				
 				bnd = x;
 				
 				// Compute the derivative as the initial K polynomial and do 5 steps with no shift
 				for (int i = 1; i <= N - 1; i++) {
-					K[i] = Convert.ToDouble(N - i) * p[i] / (Convert.ToDouble(N));
+					K[i] = Convert.ToSingle(N - i) * p[i] / (Convert.ToSingle(N));
 				}
 				K[0] = p[0];
 				
@@ -252,7 +253,7 @@ static class RealPolynomialRootFinder
 							K[j] = t * K[j - 1] + p[j];
 						}
 						K[0] = p[0];
-						if ((Math.Abs(K[NM1]) <= Math.Abs(bb) * DBL_EPSILON * 10.0)) {
+						if ((Mathf.Abs(K[NM1]) <= Mathf.Abs(bb) * DBL_EPSILON * 10.0)) {
 							zerok = 1;
 						} else {
 							zerok = 0;
@@ -267,7 +268,7 @@ static class RealPolynomialRootFinder
 				
 				
 				for (int jj = 1; jj <= 20; jj++) {
-					// Quadratic corresponds to a double shift to a non-real point and its
+					// Quadratic corresponds to a float shift to a non-real point and its
 					// complex conjugate. The point has modulus BND and amplitude rotated
 					// by 94 degrees from the previous shift.
 					
@@ -275,7 +276,7 @@ static class RealPolynomialRootFinder
 					yy = sinr * xx + cosr * yy;
 					xx = xxx;
 					sr = bnd * xx;
-					u = -(2.0 * sr);
+					u = -(2.0f * sr);
 					
 					// Second stage calculation, fixed quadratic
 					Fxshfr_ak1(20 * jj, ref NZ, sr, bnd, K, N, p, NN, qp, u,
@@ -325,9 +326,9 @@ static class RealPolynomialRootFinder
 		return result;
 	}
 	
-	private static void Fxshfr_ak1(int L2, ref int NZ, double sr, double v, double[] K, int N, double[] p, int NN, double[] qp, double u,
+	private static void Fxshfr_ak1(int L2, ref int NZ, float sr, float v, float[] K, int N, float[] p, int NN, float[] qp, float u,
 	                               
-	                               ref double lzi, ref double lzr, ref double szi, ref double szr)
+	                               ref float lzi, ref float lzr, ref float szi, ref float szr)
 	{
 		// Computes up to L2 fixed shift K-polynomials, testing for convergence in the linear or
 		// quadratic case. Initiates one of the variable shift iterations and returns with the
@@ -346,38 +347,38 @@ static class RealPolynomialRootFinder
 		int vpass = 0;
 		int vtry = 0;
 		iFlag = 1;
-		double a = 0;
-		double a1 = 0;
-		double a3 = 0;
-		double a7 = 0;
-		double b = 0;
-		double betas = 0;
-		double betav = 0;
-		double c = 0;
-		double d = 0;
-		double e = 0;
-		double f = 0;
-		double g = 0;
-		double h = 0;
-		double oss = 0;
-		double ots = 0;
-		double otv = 0;
-		double ovv = 0;
-		double s = 0;
-		double ss = 0;
-		double ts = 0;
-		double tss = 0;
-		double tv = 0;
-		double tvv = 0;
-		double ui = 0;
-		double vi = 0;
-		double vv = 0;
-		double[] qk = new double[100 + 2];
-		double[] svk = new double[100 + 2];
+		float a = 0;
+		float a1 = 0;
+		float a3 = 0;
+		float a7 = 0;
+		float b = 0;
+		float betas = 0;
+		float betav = 0;
+		float c = 0;
+		float d = 0;
+		float e = 0;
+		float f = 0;
+		float g = 0;
+		float h = 0;
+		float oss = 0;
+		float ots = 0;
+		float otv = 0;
+		float ovv = 0;
+		float s = 0;
+		float ss = 0;
+		float ts = 0;
+		float tss = 0;
+		float tv = 0;
+		float tvv = 0;
+		float ui = 0;
+		float vi = 0;
+		float vv = 0;
+		float[] qk = new float[100 + 2];
+		float[] svk = new float[100 + 2];
 		
 		NZ = 0;
-		betav = 0.25;
-		betas = 0.25;
+		betav = 0.25f;
+		betas = 0.25f;
 		oss = sr;
 		ovv = v;
 		
@@ -407,17 +408,17 @@ static class RealPolynomialRootFinder
 			}
 			
 			ts = 1;
-			tv = 1.0;
+			tv = 1.0f;
 			
 			
 			if (((j != 0) & (tFlag != 3))) {
 				// Compute relative measures of convergence of s and v sequences
 				if (vv != 0) {
-					tv = Math.Abs((vv - ovv) / vv);
+					tv = Mathf.Abs((vv - ovv) / vv);
 				}
 				
 				if (ss != 0) {
-					ts = Math.Abs((ss - oss) / ss);
+					ts = Mathf.Abs((ss - oss) / ss);
 				}
 				
 				
@@ -484,7 +485,7 @@ static class RealPolynomialRootFinder
 							
 							iFlag = 1;
 							vtry = 1;
-							betav *= 0.25;
+							betav *= 0.25f;
 							
 							// Try linear iteration if it has not been tried and the s sequence is converging
 							if ((stry==1 | (!(spass==1)))) {
@@ -507,11 +508,11 @@ static class RealPolynomialRootFinder
 							// Linear iteration has failed. Flag that it has been tried and decrease the
 							// convergence criterion
 							stry = 1;
-							betas *= 0.25;
+							betas *= 0.25f;
 							
 							
 							if ((iFlag != 0)) {
-								// If linear iteration signals an almost double real zero, attempt quadratic iteration
+								// If linear iteration signals an almost float real zero, attempt quadratic iteration
 								ui = -(s + s);
 								vi = s * s;
 							}
@@ -549,7 +550,7 @@ static class RealPolynomialRootFinder
 	}
 	
 	
-	private static void QuadSD_ak1(int NN, double u, double v, double[] p, double[] q, ref double a, ref double b)
+	private static void QuadSD_ak1(int NN, float u, float v, float[] p, float[] q, ref float a, ref float b)
 	{
 		// Divides p by the quadratic 1, u, v placing the quotient in q and the remainder in a, b
 		
@@ -569,8 +570,8 @@ static class RealPolynomialRootFinder
 		
 	}
 	
-	private static int calcSC_ak1(int N, double a, double b, ref double a1, ref double a3, ref double a7, ref double c, ref double d, ref double e, ref double f,
-	                              ref double g, ref double h, double[] K, double u, double v, double[] qk)
+	private static int calcSC_ak1(int N, float a, float b, ref float a1, ref float a3, ref float a7, ref float c, ref float d, ref float e, ref float f,
+	                              ref float g, ref float h, float[] K, float u, float v, float[] qk)
 	{
 		
 		// This routine calculates scalar quantities used to compute the next K polynomial and
@@ -585,14 +586,14 @@ static class RealPolynomialRootFinder
 		// Synthetic division of K by the quadratic 1, u, v
 		QuadSD_ak1(N, u, v, K, qk, ref c, ref d);
 		
-		if ((Math.Abs((c)) <= (100.0 * DBL_EPSILON * Math.Abs(K[N - 1])))) {
-			if ((Math.Abs((d)) <= (100.0 * DBL_EPSILON * Math.Abs(K[N - 2])))) {
+		if ((Mathf.Abs((c)) <= (100.0 * DBL_EPSILON * Mathf.Abs(K[N - 1])))) {
+			if ((Mathf.Abs((d)) <= (100.0 * DBL_EPSILON * Mathf.Abs(K[N - 2])))) {
 				return dumFlag;
 			}
 		}
 		
 		h = v * b;
-		if ((Math.Abs((d)) >= Math.Abs((c)))) {
+		if ((Mathf.Abs((d)) >= Mathf.Abs((c)))) {
 			dumFlag = 2;
 			// TYPE = 2 indicates that all formulas are divided by d
 			e = a / (d);
@@ -616,17 +617,17 @@ static class RealPolynomialRootFinder
 	}
 	
 	
-	private static void nextK_ak1(int N, int tFlag, double a, double b, double a1, ref double a3, ref double a7, double[] K, double[] qk, double[] qp)
+	private static void nextK_ak1(int N, int tFlag, float a, float b, float a1, ref float a3, ref float a7, float[] K, float[] qk, float[] qp)
 	{
 		// Computes the next K polynomials using the scalars computed in calcSC_ak1
 		
 		int i = 0;
-		double temp = 0;
+		float temp = 0;
 		
 		// Use unscaled form of the recurrence
 		if ((tFlag == 3)) {
 			K[1] = 0;
-			K[0] = 0.0;
+			K[0] = 0.0f;
 			
 			for (i = 2; i <= N - 1; i++) {
 				K[i] = qk[i - 2];
@@ -642,7 +643,7 @@ static class RealPolynomialRootFinder
 		}
 		
 		
-		if ((Math.Abs(a1) > (10.0 * DBL_EPSILON * Math.Abs(temp)))) {
+		if ((Mathf.Abs(a1) > (10.0 * DBL_EPSILON * Mathf.Abs(temp)))) {
 			// Use scaled form of the recurrence
 			
 			a7 = a7 / a1;
@@ -656,7 +657,7 @@ static class RealPolynomialRootFinder
 		} else {
 			// If a1 is nearly zero, then use a special form of the recurrence
 			
-			K[0] = 0.0;
+			K[0] = 0.0f;
 			K[1] = -(a7) * qp[0];
 			
 			for (i = 2; i <= N - 1; i++) {
@@ -665,24 +666,24 @@ static class RealPolynomialRootFinder
 		}
 	}
 	
-	private static void newest_ak1(int tFlag, ref double uu, ref double vv, double a, double a1, double a3, double a7, double b, double c, double d,
-	                               double f, double g, double h, double u, double v, double[] K, int N, double[] p)
+	private static void newest_ak1(int tFlag, ref float uu, ref float vv, float a, float a1, float a3, float a7, float b, float c, float d,
+	                               float f, float g, float h, float u, float v, float[] K, int N, float[] p)
 	{
 		// Compute new estimates of the quadratic coefficients using the scalars computed in calcSC_ak1
 		
-		double a4 = 0;
-		double a5 = 0;
-		double b1 = 0;
-		double b2 = 0;
-		double c1 = 0;
-		double c2 = 0;
-		double c3 = 0;
-		double c4 = 0;
-		double temp = 0;
+		float a4 = 0;
+		float a5 = 0;
+		float b1 = 0;
+		float b2 = 0;
+		float c1 = 0;
+		float c2 = 0;
+		float c3 = 0;
+		float c4 = 0;
+		float temp = 0;
 		
 		vv = 0;
 		//The quadratic is zeroed
-		uu = 0.0;
+		uu = 0.0f;
 		//The quadratic is zeroed
 		
 		
@@ -706,16 +707,16 @@ static class RealPolynomialRootFinder
 			temp = -c4 + a5 + b1 * a4;
 			if ((temp != 0.0)) {
 				uu = -((u * (c3 + c2) + v * (b1 * a1 + b2 * a7)) / temp) + u;
-				vv = v * (1.0 + c4 / temp);
+				vv = v * (1.0f + c4 / temp);
 			}
 			
 		}
 	}
 	
-	private static void QuadIT_ak1(int N, ref int NZ, double uu, double vv, ref double szr, ref double szi, ref double lzr, ref double lzi, double[] qp, int NN,
-	                               ref double a, ref double b, double[] p, double[] qk, ref double a1, ref double a3, ref double a7, ref double c, ref double d, ref double e,
+	private static void QuadIT_ak1(int N, ref int NZ, float uu, float vv, ref float szr, ref float szi, ref float lzr, ref float lzi, float[] qp, int NN,
+	                               ref float a, ref float b, float[] p, float[] qk, ref float a1, ref float a3, ref float a7, ref float c, ref float d, ref float e,
 	                               
-	                               ref double f, ref double g, ref double h, double[] K)
+	                               ref float f, ref float g, ref float h, float[] K)
 	{
 		// Variable-shift K-polynomial iteration for a quadratic factor converges only if the
 		// zeros are equimodular or nearly so.
@@ -727,16 +728,16 @@ static class RealPolynomialRootFinder
 		j = 0;
 		triedFlag = 0;
 		
-		double ee = 0;
-		double mp = 0;
-		double omp = 0;
-		double relstp = 0;
-		double t = 0;
-		double u = 0;
-		double ui = 0;
-		double v = 0;
-		double vi = 0;
-		double zm = 0;
+		float ee = 0;
+		float mp = 0;
+		float omp = 0;
+		float relstp = 0;
+		float t = 0;
+		float u = 0;
+		float ui = 0;
+		float v = 0;
+		float vi = 0;
+		float zm = 0;
 		
 		NZ = 0;
 		//Number of zeros found
@@ -745,30 +746,30 @@ static class RealPolynomialRootFinder
 		v = vv;
 		
 		do {
-			Quad_ak1(1.0, u, v, ref szr, ref szi, ref lzr, ref lzi);
+			Quad_ak1(1.0f, u, v, ref szr, ref szi, ref lzr, ref lzi);
 			
 			// Return if roots of the quadratic are real and not close to multiple or nearly
 			// equal and of opposite sign.
-			if ((Math.Abs(Math.Abs(szr) - Math.Abs(lzr)) > 0.01 * Math.Abs(lzr))) {
+			if ((Mathf.Abs(Mathf.Abs(szr) - Mathf.Abs(lzr)) > 0.01 * Mathf.Abs(lzr))) {
 				break; // TODO: might not be correct. Was : Exit Do
 			}
 			
 			// Evaluate polynomial by quadratic synthetic division
 			QuadSD_ak1(NN, u, v, p, qp, ref a, ref b);
 			
-			mp = Math.Abs(-((szr) * (b)) + (a)) + Math.Abs((szi) * (b));
+			mp = Mathf.Abs(-((szr) * (b)) + (a)) + Mathf.Abs((szi) * (b));
 			
 			// Compute a rigorous bound on the rounding error in evaluating p
-			zm = Math.Sqrt(Math.Abs(v));
-			ee = 2.0 * Math.Abs(qp[0]);
+			zm = Mathf.Sqrt(Mathf.Abs(v));
+			ee = 2.0f * Mathf.Abs(qp[0]);
 			t = -((szr) * (b));
 			
 			for (i = 1; i <= N - 1; i++) {
-				ee = ee * zm + Math.Abs(qp[i]);
+				ee = ee * zm + Mathf.Abs(qp[i]);
 			}
 			
-			ee = ee * zm + Math.Abs((a) + t);
-			ee = (9.0 * ee + 2.0 * Math.Abs(t) - 7.0 * (Math.Abs((a) + t) + zm * Math.Abs((b)))) * DBL_EPSILON;
+			ee = ee * zm + Mathf.Abs((a) + t);
+			ee = (9.0f * ee + 2.0f * Mathf.Abs(t) - 7.0f * (Mathf.Abs((a) + t) + zm * Mathf.Abs((b)))) * DBL_EPSILON;
 			
 			// Iteration has converged sufficiently if the polynomial value is less than 20 times this bound
 			if ((mp <= 20.0 * ee)) {
@@ -787,9 +788,9 @@ static class RealPolynomialRootFinder
 					// A cluster appears to be stalling the convergence. Five fixed shift
 					// steps are taken with a u, v close to the cluster.
 					if (relstp < DBL_EPSILON) {
-						relstp = Math.Sqrt(DBL_EPSILON);
+						relstp = Mathf.Sqrt(DBL_EPSILON);
 					} else {
-						relstp = Math.Sqrt(relstp);
+						relstp = Mathf.Sqrt(relstp);
 					}
 					
 					u -= u * relstp;
@@ -823,16 +824,16 @@ static class RealPolynomialRootFinder
 			
 			// If vi is zero, the iteration is not converging
 			if ((vi != 0)) {
-				relstp = Math.Abs((-v + vi) / vi);
+				relstp = Mathf.Abs((-v + vi) / vi);
 				u = ui;
 				v = vi;
 			}
 		} while ((vi != 0));
 	}
 	
-	private static void RealIT_ak1(ref int iFlag, ref int NZ, ref double sss, int N, double[] p, int NN, double[] qp, ref double szr, ref double szi, double[] K,
+	private static void RealIT_ak1(ref int iFlag, ref int NZ, ref float sss, int N, float[] p, int NN, float[] qp, ref float szr, ref float szi, float[] K,
 	                               
-	                               double[] qk)
+	                               float[] qk)
 	{
 		// Variable-shift H-polynomial iteration for a real zero
 		
@@ -844,14 +845,14 @@ static class RealPolynomialRootFinder
 		int nm1 = 0;
 		j = 0;
 		nm1 = N - 1;
-		double ee = 0;
-		double kv = 0;
-		double mp = 0;
-		double ms = 0;
-		double omp = 0;
-		double pv = 0;
-		double s = 0;
-		double t = 0;
+		float ee = 0;
+		float kv = 0;
+		float mp = 0;
+		float ms = 0;
+		float omp = 0;
+		float pv = 0;
+		float s = 0;
+		float t = 0;
 		
 		iFlag = 0;
 		NZ = 0;
@@ -866,13 +867,13 @@ static class RealPolynomialRootFinder
 				qp[i] = pv * s + p[i];
 				pv = pv * s + p[i];
 			}
-			mp = Math.Abs(pv);
+			mp = Mathf.Abs(pv);
 			
 			// Compute a rigorous bound on the error in evaluating p
-			ms = Math.Abs(s);
-			ee = 0.5 * Math.Abs(qp[0]);
+			ms = Mathf.Abs(s);
+			ee = 0.5f * Mathf.Abs(qp[0]);
 			for (i = 1; i <= NN - 1; i++) {
-				ee = ee * ms + Math.Abs(qp[i]);
+				ee = ee * ms + Mathf.Abs(qp[i]);
 			}
 			
 			// Iteration has converged sufficiently if the polynomial value is less than
@@ -880,7 +881,7 @@ static class RealPolynomialRootFinder
 			if ((mp <= 20.0 * DBL_EPSILON * (2.0 * ee - mp))) {
 				NZ = 1;
 				szr = s;
-				szi = 0.0;
+				szi = 0.0f;
 				break; // TODO: might not be correct. Was : Exit Do
 			}
 			
@@ -891,7 +892,7 @@ static class RealPolynomialRootFinder
 				break; // TODO: might not be correct. Was : Exit Do
 			
 			if ((j >= 2)) {
-				if (((Math.Abs(t) <= 0.001 * Math.Abs(-t + s)) & (mp > omp))) {
+				if (((Mathf.Abs(t) <= 0.001 * Mathf.Abs(-t + s)) & (mp > omp))) {
 					// A cluster of zeros near the real axis has been encountered                    ' Return with iFlag set to initiate a quadratic iteration
 					
 					iFlag = 1;
@@ -911,7 +912,7 @@ static class RealPolynomialRootFinder
 				kv = kv * s + K[i];
 				qk[i] = kv;
 			}
-			if ((Math.Abs(kv) > Math.Abs(K[nm1]) * 10.0 * DBL_EPSILON)) {
+			if ((Mathf.Abs(kv) > Mathf.Abs(K[nm1]) * 10.0 * DBL_EPSILON)) {
 				// Use the scaled form of the recurrence if the value of K at s is non-zero
 				t = -(pv / kv);
 				K[0] = qp[0];
@@ -920,7 +921,7 @@ static class RealPolynomialRootFinder
 				}
 			} else {
 				// Use unscaled form
-				K[0] = 0.0;
+				K[0] = 0.0f;
 				for (i = 1; i <= N - 1; i++) {
 					K[i] = qk[i - 1];
 				}
@@ -931,10 +932,10 @@ static class RealPolynomialRootFinder
 				kv = kv * s + K[i];
 			}
 			
-			if ((Math.Abs(kv) > (Math.Abs(K[nm1]) * 10.0 * DBL_EPSILON))) {
+			if ((Mathf.Abs(kv) > (Mathf.Abs(K[nm1]) * 10.0 * DBL_EPSILON))) {
 				t = -(pv / kv);
 			} else {
-				t = 0.0;
+				t = 0.0f;
 			}
 			
 			s += t;
@@ -942,21 +943,21 @@ static class RealPolynomialRootFinder
 		} while (true);
 	}
 	
-	private static void Quad_ak1(double a, double b1, double c, ref double sr, ref double si, ref double lr, ref double li)
+	private static void Quad_ak1(float a, float b1, float c, ref float sr, ref float si, ref float lr, ref float li)
 	{
 		// Calculates the zeros of the quadratic a*Z^2 + b1*Z + c
 		// The quadratic formula, modified to avoid overflow, is used to find the larger zero if the
 		// zeros are real and both zeros are complex. The smaller real zero is found directly from
 		// the product of the zeros c/a.
 		
-		double b = 0;
-		double d = 0;
-		double e = 0;
+		float b = 0;
+		float d = 0;
+		float e = 0;
 		
 		sr = 0;
 		si = 0;
 		lr = 0;
-		li = 0.0;
+		li = 0.0f;
 		
 		if (a == 0) {
 			if (b1 == 0) {
@@ -969,20 +970,20 @@ static class RealPolynomialRootFinder
 		}
 		
 		//Compute discriminant avoiding overflow
-		b = b1 / 2.0;
+		b = b1 / 2.0f;
 		
-		if (Math.Abs(b) < Math.Abs(c)) {
+		if (Mathf.Abs(b) < Mathf.Abs(c)) {
 			if (c >= 0) {
 				e = a;
 			} else {
 				e = -a;
 			}
 			
-			e = -e + b * (b / Math.Abs(c));
-			d = Math.Sqrt(Math.Abs(e)) * Math.Sqrt(Math.Abs(c));
+			e = -e + b * (b / Mathf.Abs(c));
+			d = Mathf.Sqrt(Mathf.Abs(e)) * Mathf.Sqrt(Mathf.Abs(c));
 		} else {
-			e = -((a / b) * (c / b)) + 1.0;
-			d = Math.Sqrt(Math.Abs(e)) * (Math.Abs(b));
+			e = -((a / b) * (c / b)) + 1.0f;
+			d = Mathf.Sqrt(Mathf.Abs(e)) * (Mathf.Abs(b));
 		}
 		
 		
@@ -1001,689 +1002,9 @@ static class RealPolynomialRootFinder
 			// Complex conjugate zeros
 			lr = -(b / a);
 			sr = -(b / a);
-			si = Math.Abs(d / a);
+			si = Mathf.Abs(d / a);
 			li = -(si);
 		}
 		
-	}
-	
-	
-}
-
-static class ComplexPolynomialRootFinder
-{
-	static double sr;
-	static double si;
-	static double tr;
-	static double ti;
-	static double pvr;
-	static double pvi;
-	static double are;
-	static double mre;
-	static double eta;
-	static double infin;
-	
-	static int nn;
-	//Global variables that assist the computation, taken from the Visual Studio C++ compiler class float
-	// smallest such that 1.0+DBL_EPSILON != 1.0 
-	static double DBL_EPSILON = 2.22044604925031E-16;
-	// max value 
-	static double DBL_MAX = 1.79769313486232E+307;
-	// min positive value 
-	static double DBL_MIN = 2.2250738585072E-308;
-	// exponent radix 
-	static double DBL_RADIX = 2;
-	
-	
-	//If needed, set the maximum allowed degree for the polynomial here:
-	
-	static int Max_Degree_Polynomial = 100;
-	//It is done to allocate memory for the computation arrays, so be careful to not set i too high, though in practice it should not be a problem as it is now.
-	
-	//static int Degree;
-	// Allocate arrays
-	static double[] pr = new double[Max_Degree_Polynomial + 2];
-	static double[] pi = new double[Max_Degree_Polynomial + 2];
-	static double[] hr = new double[Max_Degree_Polynomial + 2];
-	static double[] hi = new double[Max_Degree_Polynomial + 2];
-	static double[] qpr = new double[Max_Degree_Polynomial + 2];
-	static double[] qpi = new double[Max_Degree_Polynomial + 2];
-	static double[] qhr = new double[Max_Degree_Polynomial + 2];
-	static double[] qhi = new double[Max_Degree_Polynomial + 2];
-	static double[] shr = new double[Max_Degree_Polynomial + 2];
-	
-	static double[] shi = new double[Max_Degree_Polynomial + 2];
-	public static List<Complex> FindRoots(params Complex[] Input)
-	{
-		
-		List<Complex> result = new List<Complex>();
-		
-		int idnn2 = 0;
-		int conv = 0;
-		double xx = 0;
-		double yy = 0;
-		double cosr = 0;
-		double sinr = 0;
-		double smalno = 0;
-		double @base = 0;
-		double xxx = 0;
-		double zr = 0;
-		double zi = 0;
-		double bnd = 0;
-		
-		//     const double *opr, const double *opi, int degree, double *zeror, double *zeroi
-		//Helper variable that indicates the maximum length of the polynomial array
-		int Max_Degree_Helper = Max_Degree_Polynomial + 1;
-		
-		//Actual degree calculated from the items in the Input ParamArray
-		int Degree = Input.Length - 1;
-		
-		//Are the polynomial larger that the maximum allowed?
-		if (Degree > Max_Degree_Polynomial) {
-			throw new Exception("The entered Degree is greater than MAXDEGREE. Exiting root finding algorithm. No further action taken.");
-		}
-		
-		double[] opr = new double[Degree + 2];
-		double[] opi = new double[Degree + 2];
-		double[] zeror = new double[Degree + 2];
-		double[] zeroi = new double[Degree + 2];
-		
-		for (int i = 0; i <= Input.Length - 1; i++) {
-			opr[i] = Input[i].Real;
-			opi[i] = Input[i].Imaginary;
-		}
-		
-		mcon(ref eta, ref infin, ref smalno, ref @base);
-		are = eta;
-		mre = 2.0 * Math.Sqrt(2.0) * eta;
-		xx = 0.70710678;
-		yy = -xx;
-		cosr = -0.060756474;
-		sinr = -0.99756405;
-		nn = Degree;
-		
-		// Algorithm fails if the leading coefficient is zero
-		if ((opr[0] == 0 & opi[0] == 0)) {
-			throw new Exception("The leading coefficient is zero. No further action taken. Program terminated.");
-		}
-		
-		
-		// Remove the zeros at the origin if any
-		while ((opr[nn] == 0 & opi[nn] == 0)) {
-			idnn2 = Degree - nn;
-			zeror[idnn2] = 0;
-			zeroi[idnn2] = 0;
-			nn -= 1;
-		}
-		
-		// Make a copy of the coefficients
-		for (int i = 0; i <= nn; i++) {
-			pr[i] = opr[i];
-			pi[i] = opi[i];
-			shr[i] = cmod(pr[i], pi[i]);
-		}
-		
-		// Scale the polynomial
-		bnd = scale(nn, shr, eta, infin, smalno, @base);
-		if ((bnd != 1)) {
-			for (int i = 0; i <= nn; i++) {
-				pr[i] *= bnd;
-				pi[i] *= bnd;
-			}
-		}
-	search:
-			
-		if ((nn <= 1)) {
-			cdivid(-pr[1], -pi[1], pr[0], pi[0], ref zeror[Degree - 1], ref zeroi[Degree - 1]);
-			
-			for (int i = 0; i <= Degree - 1; i++) {
-				result.Add(new Complex(zeror[i], zeroi[i]));
-			}
-			return result;
-			
-		}
-		
-		// Calculate bnd, alower bound on the modulus of the zeros
-		for (int i = 0; i <= nn; i++) {
-			shr[i] = cmod(pr[i], pi[i]);
-		}
-		
-		cauchy(nn, shr, shi, ref bnd);
-		
-		
-		// Outer loop to control 2 Major passes with different sequences of shifts
-		for (int cnt1 = 1; cnt1 <= 2; cnt1++) {
-			// First stage  calculation , no shift
-			noshft(5);
-			
-			// Inner loop to select a shift
-			for (int cnt2 = 1; cnt2 <= 9; cnt2++) {
-				// Shift is chosen with modulus bnd and amplitude rotated by 94 degree from the previous shif
-				xxx = cosr * xx - sinr * yy;
-				yy = sinr * xx + cosr * yy;
-				xx = xxx;
-				sr = bnd * xx;
-				si = bnd * yy;
-				
-				// Second stage calculation, fixed shift
-				fxshft(10 * cnt2, ref zr, ref zi, ref conv);
-				if ((conv==1)) {
-					// The second stage jumps directly to the third stage ieration
-					// If successful the zero is stored and the polynomial deflated
-					idnn2 = Degree - nn;
-					zeror[idnn2] = zr;
-					zeroi[idnn2] = zi;
-					nn -= 1;
-					for (int i = 0; i <= nn; i++) {
-						pr[i] = qpr[i];
-						pi[i] = qpi[i];
-					}
-					
-					goto search;
-				}
-				// If the iteration is unsuccessful another shift is chosen
-			}
-			// if 9 shifts fail, the outer loop is repeated with another sequence of shifts
-		}
-		
-		// The zerofinder has failed on two major passes
-		// return empty handed with the number of roots found (less than the original degree)
-		Degree -= nn;
-		
-		
-		for (int i = 0; i <= Degree - 1; i++) {
-			result.Add(new Complex(zeror[i], zeroi[i]));
-		}
-		
-		return result;
-		throw new Exception("The program could not converge to find all the zeroes, but a prelimenary result with the ones that are found is returned.");
-		
-	}
-	
-	
-	// COMPUTES  THE DERIVATIVE  POLYNOMIAL AS THE INITIAL H
-	// POLYNOMIAL AND COMPUTES L1 NO-SHIFT H POLYNOMIALS.
-	//
-	private static void noshft(int l1)
-	{
-		int j = 0;
-		int n = 0;
-		int nm1 = 0;
-		double xni = 0;
-		double t1 = 0;
-		double t2 = 0;
-		
-		n = nn;
-		nm1 = n - 1;
-		for (int i = 0; i <= n; i++) {
-			xni = nn - i;
-			hr[i] = xni * pr[i] / n;
-			hi[i] = xni * pi[i] / n;
-		}
-		for (int jj = 1; jj <= l1; jj++) {
-			if ((cmod(hr[n - 1], hi[n - 1]) > eta * 10 * cmod(pr[n - 1], pi[n - 1]))) {
-				cdivid(-pr[nn], -pi[nn], hr[n - 1], hi[n - 1], ref tr, ref ti);
-				for (int i = 0; i <= nm1 - 1; i++) {
-					j = nn - i - 1;
-					t1 = hr[j - 1];
-					t2 = hi[j - 1];
-					hr[j] = tr * t1 - ti * t2 + pr[j];
-					hi[j] = tr * t2 + ti * t1 + pi[j];
-				}
-				hr[0] = pr[0];
-				hi[0] = pi[0];
-				
-			} else {
-				// If the constant term is essentially zero, shift H coefficients
-				for (int i = 0; i <= nm1 - 1; i++) {
-					j = nn - i - 1;
-					hr[j] = hr[j - 1];
-					hi[j] = hi[j - 1];
-				}
-				hr[0] = 0;
-				hi[0] = 0;
-			}
-		}
-	}
-	
-	// COMPUTES L2 FIXED-SHIFT H POLYNOMIALS AND TESTS FOR CONVERGENCE.
-	// INITIATES A VARIABLE-SHIFT ITERATION AND RETURNS WITH THE
-	// APPROXIMATE ZERO IF SUCCESSFUL.
-	// L2 - LIMIT OF FIXED SHIFT STEPS
-	// ZR,ZI - APPROXIMATE ZERO IF CONV IS .TRUE.
-	// CONV  - LOGICAL INDICATING CONVERGENCE OF STAGE 3 ITERATION
-	//
-	private static void fxshft(int l2, ref double zr, ref double zi, ref int conv)
-	{
-		int n = 0;
-		int test = 0;
-		int pasd = 0;
-		int bol = 0;
-		double otr = 0;
-		double oti = 0;
-		double svsr = 0;
-		double svsi = 0;
-		
-		n = nn;
-		polyev(nn, sr, si, pr, pi, qpr, qpi, ref pvr, ref pvi);
-		test = 1;
-		pasd = 0;
-		
-		// Calculate first T = -P(S)/H(S)
-		calct(ref bol);
-		
-		// Main loop for second stage
-		for (int j = 1; j <= l2; j++) {
-			otr = tr;
-			oti = ti;
-			
-			// Compute the next H Polynomial and new t
-			nexth(bol);
-			calct(ref bol);
-			zr = sr + tr;
-			zi = si + ti;
-			
-			// Test for convergence unless stage 3 has failed once or this
-			// is the last H Polynomial
-			if ((!(bol==1 | !(test==1) | j == 12))) {
-				if ((cmod(tr - otr, ti - oti) < 0.5 * cmod(zr, zi))) {
-					
-					if ((pasd==1)) {
-						// The weak convergence test has been passwed twice, start the third stage
-						// Iteration, after saving the current H polynomial and shift
-						for (int i = 0; i <= n - 1; i++) {
-							shr[i] = hr[i];
-							shi[i] = hi[i];
-						}
-						svsr = sr;
-						svsi = si;
-						vrshft(10, ref zr, ref zi, ref conv);
-						if ((conv==1))
-							return;
-						
-						//The iteration failed to converge. Turn off testing and restore h,s,pv and T
-						test = 0;
-						for (int i = 0; i <= n - 1; i++) {
-							hr[i] = shr[i];
-							hi[i] = shi[i];
-						}
-						sr = svsr;
-						si = svsi;
-						polyev(nn, sr, si, pr, pi, qpr, qpi, ref pvr, ref pvi);
-						calct(ref bol);
-						continue;
-					}
-					pasd = 1;
-				}
-			} else {
-				pasd = 0;
-			}
-		}
-		
-		// Attempt an iteration with final H polynomial from second stage
-		vrshft(10, ref zr, ref zi, ref conv);
-	}
-	
-	// CARRIES OUT THE THIRD STAGE ITERATION.
-	// L3 - LIMIT OF STEPS IN STAGE 3.
-	// ZR,ZI   - ON ENTRY CONTAINS THE INITIAL ITERATE, IF THE
-	//           ITERATION CONVERGES IT CONTAINS THE FINAL ITERATE ON EXIT.
-	// CONV    -  .TRUE. IF ITERATION CONVERGES
-	//
-	private static void vrshft(int l3, ref double zr, ref double zi, ref int conv)
-	{
-		int b = 0;
-		int bol = 0;
-		// Int(i, j)
-		
-		double mp = 0;
-		double ms = 0;
-		double omp = 0;
-		double relstp = 0;
-		double r1 = 0;
-		double r2 = 0;
-		double tp = 0;
-		
-		conv = 0;
-		b = 0;
-		sr = zr;
-		si = zi;
-		
-		// Main loop for stage three
-		
-		for (int i = 1; i <= l3; i++) {
-			// Evaluate P at S and test for convergence
-			polyev(nn, sr, si, pr, pi, qpr, qpi, ref pvr, ref pvi);
-			mp = cmod(pvr, pvi);
-			ms = cmod(sr, si);
-			if ((mp <= 20 * errev(nn, qpr, qpi, ms, mp, are, mre))) {
-				// Polynomial value is smaller in value than a bound onthe error
-				// in evaluationg P, terminate the ietartion
-				conv = 1;
-				zr = sr;
-				zi = si;
-				return;
-			}
-			if ((i != 1)) {
-				
-				if ((!(b==1 | mp < omp | relstp >= 0.05))) {
-					// Iteration has stalled. Probably a cluster of zeros. Do 5 fixed 
-					// shift steps into the cluster to force one zero to dominate
-					tp = relstp;
-					b = 1;
-					if ((relstp < eta))
-						tp = eta;
-					r1 = Math.Sqrt(tp);
-					r2 = sr * (1 + r1) - si * r1;
-					si = sr * r1 + si * (1 + r1);
-					sr = r2;
-					polyev(nn, sr, si, pr, pi, qpr, qpi, ref pvr, ref pvi);
-					for (int j = 1; j <= 5; j++) {
-						calct(ref bol);
-						nexth(bol);
-					}
-					
-					omp = infin;
-					goto _20;
-				}
-				
-				// Exit if polynomial value increase significantly
-				if ((mp * 0.1 > omp))
-					return;
-			}
-			
-			omp = mp;
-		_20:
-				
-				// Calculate next iterate
-				calct(ref bol);
-			nexth(bol);
-			calct(ref bol);
-			if ((!(bol==1))) {
-				relstp = cmod(tr, ti) / cmod(sr, si);
-				sr += tr;
-				si += ti;
-			}
-		}
-	}
-	
-	// COMPUTES  T = -P(S)/H(S).
-	// BOOL   - LOGICAL, SET TRUE IF H(S) IS ESSENTIALLY ZERO.
-	private static void calct(ref int bol)
-	{
-		// Int(n)
-		int n = 0;
-		double hvr = 0;
-		double hvi = 0;
-		
-		n = nn;
-		
-		// evaluate h(s)
-		polyev(n - 1, sr, si, hr, hi, qhr, qhi, ref hvr, ref hvi);
-		
-		if (cmod(hvr, hvi) <= are * 10 * cmod(hr[n - 1], hi[n - 1])) {
-			bol = 1;
-		} else {
-			bol = 0;
-		}
-		
-		if ((!(bol==1))) {
-			cdivid(-pvr, -pvi, hvr, hvi, ref tr, ref ti);
-			return;
-		}
-		
-		tr = 0;
-		ti = 0;
-	}
-	
-	// CALCULATES THE NEXT SHIFTED H POLYNOMIAL.
-	// BOOL   -  LOGICAL, IF .TRUE. H(S) IS ESSENTIALLY ZERO
-	//
-	
-	private static void nexth(int bol)
-	{
-		int n = 0;
-		double t1 = 0;
-		double t2 = 0;
-		
-		n = nn;
-		if ((!(bol==1))) {
-			for (int j = 1; j <= n - 1; j++) {
-				t1 = qhr[j - 1];
-				t2 = qhi[j - 1];
-				hr[j] = tr * t1 - ti * t2 + qpr[j];
-				hi[j] = tr * t2 + ti * t1 + qpi[j];
-			}
-			hr[0] = qpr[0];
-			hi[0] = qpi[0];
-			return;
-		}
-		
-		// If h(s) is zero replace H with qh
-		
-		for (int j = 1; j <= n - 1; j++) {
-			hr[j] = qhr[j - 1];
-			hi[j] = qhi[j - 1];
-		}
-		hr[0] = 0;
-		hi[0] = 0;
-	}
-	
-	// EVALUATES A POLYNOMIAL  P  AT  S  BY THE HORNER RECURRENCE
-	// PLACING THE PARTIAL SUMS IN Q AND THE COMPUTED VALUE IN PV.
-	//  
-	private static void polyev(int nn, double sr, double si, double[] pr, double[] pi, double[] qr, double[] qi, ref double pvr, ref double pvi)
-	{
-		//{
-		//     Int(i)
-		double t = 0;
-		
-		qr[0] = pr[0];
-		qi[0] = pi[0];
-		pvr = qr[0];
-		pvi = qi[0];
-		
-		for (int i = 1; i <= nn; i++) {
-			t = (pvr) * sr - (pvi) * si + pr[i];
-			pvi = (pvr) * si + (pvi) * sr + pi[i];
-			pvr = t;
-			qr[i] = pvr;
-			qi[i] = pvi;
-		}
-	}
-	
-	// BOUNDS THE ERROR IN EVALUATING THE POLYNOMIAL BY THE HORNER RECURRENCE.
-	// QR,QI - THE PARTIAL SUMS
-	// MS    -MODULUS OF THE POINT
-	// MP    -MODULUS OF POLYNOMIAL VALUE
-	// ARE, MRE -ERROR BOUNDS ON COMPLEX ADDITION AND MULTIPLICATION
-	//
-	private static double errev(int nn, double[] qr, double[] qi, double ms, double mp, double are, double mre)
-	{
-		//{
-		//     Int(i)
-		double e = 0;
-		
-		e = cmod(qr[0], qi[0]) * mre / (are + mre);
-		for (int i = 0; i <= nn; i++) {
-			e = e * ms + cmod(qr[i], qi[i]);
-		}
-		
-		return e * (are + mre) - mp * mre;
-	}
-	
-	// CAUCHY COMPUTES A LOWER BOUND ON THE MODULI OF THE ZEROS OF A
-	// POLYNOMIAL - PT IS THE MODULUS OF THE COEFFICIENTS.
-	//
-	private static void cauchy(int nn, double[] pt, double[] q, ref double fn_val)
-	{
-		int n = 0;
-		double x = 0;
-		double xm = 0;
-		double f = 0;
-		double dx = 0;
-		double df = 0;
-		
-		pt[nn] = -pt[nn];
-		
-		// Compute upper estimate bound
-		n = nn;
-		x = Math.Exp(Math.Log(-pt[nn]) - Math.Log(pt[0])) / n;
-		if ((pt[n - 1] != 0)) {
-			//// Newton step at the origin is better, use it
-			xm = -pt[nn] / pt[n - 1];
-			if ((xm < x))
-				x = xm;
-		}
-		
-		// Chop the interval (0,x) until f < 0
-		
-		while ((true)) {
-			xm = x * 0.1;
-			f = pt[0];
-			for (int i = 1; i <= nn; i++) {
-				f = f * xm + pt[i];
-			}
-			if ((f <= 0))
-				break; // TODO: might not be correct. Was : Exit While
-			x = xm;
-		}
-		dx = x;
-		
-		// Do Newton iteration until x converges to two decimal places
-		while ((Math.Abs(dx / x) > 0.005)) {
-			q[0] = pt[0];
-			for (int i = 1; i <= nn; i++) {
-				q[i] = q[i - 1] * x + pt[i];
-			}
-			f = q[nn];
-			df = q[0];
-			for (int i = 1; i <= n - 1; i++) {
-				df = df * x + q[i];
-			}
-			dx = f / df;
-			x -= dx;
-		}
-		
-		fn_val = x;
-	}
-	
-	// RETURNS A SCALE FACTOR TO MULTIPLY THE COEFFICIENTS OF THE POLYNOMIAL.
-	// THE SCALING IS DONE TO AVOID OVERFLOW AND TO AVOID UNDETECTED UNDERFLOW
-	// INTERFERING WITH THE CONVERGENCE CRITERION.  THE FACTOR IS A POWER OF THE
-	// BASE.
-	// PT - MODULUS OF COEFFICIENTS OF P
-	// ETA, INFIN, SMALNO, BASE - CONSTANTS DESCRIBING THE FLOATING POINT ARITHMETIC.
-	//
-	private static double scale(int nn, double[] pt, double eta, double infin, double smalno, double @base)
-	{
-		//{
-		//     Int(i, l)
-		int l = 0;
-		double hi = 0;
-		double lo = 0;
-		double max = 0;
-		double min = 0;
-		double x = 0;
-		double sc = 0;
-		double fn_val = 0;
-		
-		// Find largest and smallest moduli of coefficients
-		hi = Math.Sqrt(infin);
-		lo = smalno / eta;
-		max = 0;
-		min = infin;
-		
-		for (int i = 0; i <= nn; i++) {
-			x = pt[i];
-			if ((x > max))
-				max = x;
-			if ((x != 0 & x < min))
-				min = x;
-		}
-		
-		// Scale only if there are very large or very small components
-		fn_val = 1;
-		if ((min >= lo & max <= hi))
-			return fn_val;
-		x = lo / min;
-		if ((x <= 1)) {
-			sc = 1 / (Math.Sqrt(max) * Math.Sqrt(min));
-		} else {
-			sc = x;
-			if ((infin / sc > max))
-				sc = 1;
-		}
-		l = Convert.ToInt32(Math.Log(sc) / Math.Log(@base) + 0.5);
-		fn_val = Math.Pow(@base, l);
-		return fn_val;
-	}
-	
-	// COMPLEX DIVISION C = A/B, AVOIDING OVERFLOW.
-	//
-	private static void cdivid(double ar, double ai, double br, double bi, ref double cr, ref double ci)
-	{
-		double r = 0;
-		double d = 0;
-		double t = 0;
-		double infin = 0;
-		
-		if ((br == 0 & bi == 0)) {
-			// Division by zero, c = infinity
-			mcon(ref t, ref infin, ref t, ref t);
-			cr = infin;
-			ci = infin;
-			return;
-		}
-		
-		if ((Math.Abs(br) < Math.Abs(bi))) {
-			r = br / bi;
-			d = bi + r * br;
-			cr = (ar * r + ai) / d;
-			ci = (ai * r - ar) / d;
-			return;
-		}
-		
-		r = bi / br;
-		d = br + r * bi;
-		cr = (ar + ai * r) / d;
-		ci = (ai - ar * r) / d;
-	}
-	
-	// MODULUS OF A COMPLEX NUMBER AVOIDING OVERFLOW.
-	//
-	private static double cmod(double r, double i)
-	{
-		double ar = 0;
-		double ai = 0;
-		
-		ar = Math.Abs(r);
-		ai = Math.Abs(i);
-		if ((ar < ai)) {
-			return ai * Math.Sqrt(1.0 + Math.Pow((ar / ai), 2.0));
-			
-		} else if ((ar > ai)) {
-			return ar * Math.Sqrt(1.0 + Math.Pow((ai / ar), 2.0));
-		} else {
-			return ar * Math.Sqrt(2.0);
-		}
-	}
-	// MCON PROVIDES MACHINE CONSTANTS USED IN VARIOUS PARTS OF THE PROGRAM.
-	// THE USER MAY EITHER SET THEM DIRECTLY OR USE THE STATEMENTS BELOW TO
-	// COMPUTE THEM. THE MEANING OF THE FOUR CONSTANTS ARE -
-	// ETA       THE MAXIMUM RELATIVE REPRESENTATION ERROR WHICH CAN BE DESCRIBED
-	//           AS THE SMALLEST POSITIVE FLOATING-POINT NUMBER SUCH THAT
-	//           1.0_dp + ETA > 1.0.
-	// INFINY    THE LARGEST FLOATING-POINT NUMBER
-	// SMALNO    THE SMALLEST POSITIVE FLOATING-POINT NUMBER
-	// BASE      THE BASE OF THE FLOATING-POINT NUMBER SYSTEM USED
-	//
-	
-	private static void mcon(ref double eta, ref double infiny, ref double smalno, ref double @base)
-	{
-		@base = DBL_RADIX;
-		eta = DBL_EPSILON;
-		infiny = DBL_MAX;
-		smalno = DBL_MIN;
 	}
 }

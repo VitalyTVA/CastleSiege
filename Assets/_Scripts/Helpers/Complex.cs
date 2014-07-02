@@ -6,35 +6,36 @@
 using System;
 using System.Globalization;
 using System.Runtime;
+using UnityEngine;
 
 	[Serializable]
 	public struct Complex : IEquatable<Complex>, IFormattable {
-		private double m_real;
-		private double m_imaginary;
+		private float m_real;
+		private float m_imaginary;
 		
 		public static readonly Complex Zero;
 		
 		public static readonly Complex One;
 		
 		public static readonly Complex ImaginaryOne;
-		private const double LOG_10_INV = 0.43429448190325;
+		private const float LOG_10_INV = 0.43429448190325f;
 		
 		
-		public double Real {
+		public float Real {
 			get {
 				return this.m_real;
 			}
 		}
 		
 		
-		public double Imaginary {
+		public float Imaginary {
 			get {
 				return this.m_imaginary;
 			}
 		}
 		
 		
-		public double Magnitude {
+		public float Magnitude {
 			
 			get {
 				return Complex.Abs(this);
@@ -42,83 +43,78 @@ using System.Runtime;
 		}
 		
 		
-		public double Phase {
+		public float Phase {
 			
 			get {
-				return Math.Atan2(this.m_imaginary, this.m_real);
+				return Mathf.Atan2(this.m_imaginary, this.m_real);
 			}
 		}
 		
 		static Complex() {
-			Complex.Zero = new Complex(0.0, 0.0);
-			Complex.One = new Complex(1.0, 0.0);
-			Complex.ImaginaryOne = new Complex(0.0, 1.0);
+			Complex.Zero = new Complex(0.0f, 0.0f);
+			Complex.One = new Complex(1.0f, 0.0f);
+			Complex.ImaginaryOne = new Complex(0.0f, 1.0f);
 		}
 		
 		
 		
-		public Complex(double real, double imaginary) {
+		public Complex(float real, float imaginary) {
 			this.m_real = real;
 			this.m_imaginary = imaginary;
 		}
 		
 		
 		public static implicit operator Complex(short value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		public static implicit operator Complex(int value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		public static implicit operator Complex(long value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		
 		public static implicit operator Complex(ushort value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		
 		public static implicit operator Complex(uint value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		
 		public static implicit operator Complex(ulong value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		
 		public static implicit operator Complex(sbyte value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		public static implicit operator Complex(byte value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		public static implicit operator Complex(float value) {
-			return new Complex((double)value, 0.0);
-		}
-		
-		
-		public static implicit operator Complex(double value) {
-			return new Complex(value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
 		public static explicit operator Complex(Decimal value) {
-			return new Complex((double)value, 0.0);
+			return new Complex((float)value, 0.0f);
 		}
 		
 		
@@ -143,15 +139,15 @@ using System.Runtime;
 		
 		
 		public static Complex operator /(Complex left, Complex right) {
-			double num1 = left.m_real;
-			double num2 = left.m_imaginary;
-			double num3 = right.m_real;
-			double num4 = right.m_imaginary;
-			if(Math.Abs(num4) < Math.Abs(num3)) {
-				double num5 = num4 / num3;
+			float num1 = left.m_real;
+			float num2 = left.m_imaginary;
+			float num3 = right.m_real;
+			float num4 = right.m_imaginary;
+			if(Mathf.Abs(num4) < Mathf.Abs(num3)) {
+				float num5 = num4 / num3;
 				return new Complex((num1 + num2 * num5) / (num3 + num4 * num5), (num2 - num1 * num5) / (num3 + num4 * num5));
 			} else {
-				double num5 = num3 / num4;
+				float num5 = num3 / num4;
 				return new Complex((num2 + num1 * num5) / (num4 + num3 * num5), (-num1 + num2 * num5) / (num4 + num3 * num5));
 			}
 		}
@@ -173,8 +169,8 @@ using System.Runtime;
 		}
 		
 		
-		public static Complex FromPolarCoordinates(double magnitude, double phase) {
-			return new Complex(magnitude * Math.Cos(phase), magnitude * Math.Sin(phase));
+		public static Complex FromPolarCoordinates(float magnitude, float phase) {
+			return new Complex(magnitude * Mathf.Cos(phase), magnitude * Mathf.Sin(phase));
 		}
 		
 		
@@ -208,19 +204,19 @@ using System.Runtime;
 		}
 		
 		
-		public static double Abs(Complex value) {
-			if(double.IsInfinity(value.m_real) || double.IsInfinity(value.m_imaginary))
-				return double.PositiveInfinity;
-			double num1 = Math.Abs(value.m_real);
-			double num2 = Math.Abs(value.m_imaginary);
+		public static float Abs(Complex value) {
+			if(float.IsInfinity(value.m_real) || float.IsInfinity(value.m_imaginary))
+				return float.PositiveInfinity;
+			float num1 = Mathf.Abs(value.m_real);
+			float num2 = Mathf.Abs(value.m_imaginary);
 			if(num1 > num2) {
-				double num3 = num2 / num1;
-				return num1 * Math.Sqrt(1.0 + num3 * num3);
+				float num3 = num2 / num1;
+				return num1 * Mathf.Sqrt(1.0f + num3 * num3);
 			} else {
 				if(num2 == 0.0)
 					return num1;
-				double num3 = num1 / num2;
-				return num2 * Math.Sqrt(1.0 + num3 * num3);
+				float num3 = num1 / num2;
+				return num2 * Mathf.Sqrt(1.0f + num3 * num3);
 			}
 		}
 		
@@ -295,37 +291,11 @@ using System.Runtime;
 		}
 		
 		
-		public static Complex Sin(Complex value) {
-			double num1 = value.m_real;
-			double num2 = value.m_imaginary;
-			return new Complex(Math.Sin(num1) * Math.Cosh(num2), Math.Cos(num1) * Math.Sinh(num2));
-		}
-		
-		
-		public static Complex Sinh(Complex value) {
-			double num1 = value.m_real;
-			double num2 = value.m_imaginary;
-			return new Complex(Math.Sinh(num1) * Math.Cos(num2), Math.Cosh(num1) * Math.Sin(num2));
-		}
-		
-		
 		public static Complex Asin(Complex value) {
 			return -Complex.ImaginaryOne * Complex.Log(Complex.ImaginaryOne * value + Complex.Sqrt(Complex.One - value * value));
 		}
 		
 		
-		public static Complex Cos(Complex value) {
-			double num1 = value.m_real;
-			double num2 = value.m_imaginary;
-			return new Complex(Math.Cos(num1) * Math.Cosh(num2), -(Math.Sin(num1) * Math.Sinh(num2)));
-		}
-		
-		
-		public static Complex Cosh(Complex value) {
-			double num1 = value.m_real;
-			double num2 = value.m_imaginary;
-			return new Complex(Math.Cosh(num1) * Math.Cos(num2), Math.Sinh(num1) * Math.Sin(num2));
-		}
 		
 		
 		public static Complex Acos(Complex value) {
@@ -333,45 +303,35 @@ using System.Runtime;
 		}
 		
 		
-		public static Complex Tan(Complex value) {
-			return Complex.Sin(value) / Complex.Cos(value);
-		}
-		
-		
-		public static Complex Tanh(Complex value) {
-			return Complex.Sinh(value) / Complex.Cosh(value);
-		}
-		
-		
 		public static Complex Atan(Complex value) {
-			Complex complex = new Complex(2.0, 0.0);
+			Complex complex = new Complex(2.0f, 0.0f);
 			return Complex.ImaginaryOne / complex * (Complex.Log(Complex.One - Complex.ImaginaryOne * value) - Complex.Log(Complex.One + Complex.ImaginaryOne * value));
 		}
 		
 		
 		public static Complex Log(Complex value) {
-			return new Complex(Math.Log(Complex.Abs(value)), Math.Atan2(value.m_imaginary, value.m_real));
+			return new Complex(Mathf.Log(Complex.Abs(value)), Mathf.Atan2(value.m_imaginary, value.m_real));
 		}
 		
 		
-		public static Complex Log(Complex value, double baseValue) {
+		public static Complex Log(Complex value, float baseValue) {
 			return Complex.Log(value) / Complex.Log((Complex)baseValue);
 		}
 		
 		
 		public static Complex Log10(Complex value) {
-			return Complex.Scale(Complex.Log(value), 0.43429448190325);
+			return Complex.Scale(Complex.Log(value), 0.43429448190325f);
 		}
 		
 		
 		public static Complex Exp(Complex value) {
-			double num = Math.Exp(value.m_real);
-			return new Complex(num * Math.Cos(value.m_imaginary), num * Math.Sin(value.m_imaginary));
+			float num = Mathf.Exp(value.m_real);
+			return new Complex(num * Mathf.Cos(value.m_imaginary), num * Mathf.Sin(value.m_imaginary));
 		}
 		
 		
 		public static Complex Sqrt(Complex value) {
-			return Complex.FromPolarCoordinates(Math.Sqrt(value.Magnitude), value.Phase / 2.0);
+			return Complex.FromPolarCoordinates(Mathf.Sqrt(value.Magnitude), value.Phase / 2.0f);
 		}
 		
 		
@@ -380,23 +340,23 @@ using System.Runtime;
 				return Complex.One;
 			if(value == Complex.Zero)
 				return Complex.Zero;
-			double x = value.m_real;
-			double y1 = value.m_imaginary;
-			double y2 = power.m_real;
-			double num1 = power.m_imaginary;
-			double num2 = Complex.Abs(value);
-			double num3 = Math.Atan2(y1, x);
-			double num4 = y2 * num3 + num1 * Math.Log(num2);
-			double num5 = Math.Pow(num2, y2) * Math.Pow(Math.E, -num1 * num3);
-			return new Complex(num5 * Math.Cos(num4), num5 * Math.Sin(num4));
+			float x = value.m_real;
+			float y1 = value.m_imaginary;
+			float y2 = power.m_real;
+			float num1 = power.m_imaginary;
+			float num2 = Complex.Abs(value);
+			float num3 = Mathf.Atan2(y1, x);
+			float num4 = y2 * num3 + num1 * Mathf.Log(num2);
+			float num5 = Mathf.Pow(num2, y2) * Mathf.Pow(Mathf.Exp(1), -num1 * num3);
+			return new Complex(num5 * Mathf.Cos(num4), num5 * Mathf.Sin(num4));
 		}
 		
 		
-		public static Complex Pow(Complex value, double power) {
-			return Complex.Pow(value, new Complex(power, 0.0));
+		public static Complex Pow(Complex value, float power) {
+			return Complex.Pow(value, new Complex(power, 0.0f));
 		}
 		
-		private static Complex Scale(Complex value, double factor) {
+		private static Complex Scale(Complex value, float factor) {
 			return new Complex(factor * value.m_real, factor * value.m_imaginary);
 		}
 	}
