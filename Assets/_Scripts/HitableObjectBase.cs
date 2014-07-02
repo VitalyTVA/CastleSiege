@@ -11,7 +11,7 @@ public abstract class HitableObjectBase : MonoBehaviour  {
 	public void Hit (int damage) {
 		if(damage == 0 || health <= 0)
 			return;
-		health -= damage;
+		health = Mathf.Max(0, health - damage);
 		if(health > 0)
 			OnHit();
 		else

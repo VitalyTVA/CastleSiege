@@ -12,7 +12,8 @@ public class ExplodableHitter : MonoBehaviour {
 		foreach (var collider in colliders) {
 			if(collider.gameObject.rigidbody != null) {
 				collider.gameObject.rigidbody.AddExplosionForce(explostionForce, transform.position, explosionRadius, upwardsForce, ForceMode.Impulse);
-				var damageRatio =  Vector3.Distance(transform.position, collider.gameObject.transform.position) / explosionRadius;
+				var damageRatio =  Mathf.Max(0, explosionRadius - Vector3.Distance(transform.position, collider.gameObject.transform.position)) / explosionRadius;
+				//print(damageRatio);
 				Hitter.HitGameObject(collider.gameObject, (int)(maxDamage * damageRatio));
 			}
 		}
