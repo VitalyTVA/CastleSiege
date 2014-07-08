@@ -6,7 +6,7 @@ using System.Linq;
 public static class MathHelper {
     public static float[] SolveQuadratic(float a, float b, float c) {
 		float D = b * b - 4 * a * c;
-		if (D < 0)
+		if (D < 0) 
             return Enumerable.Empty<float>().ToArray();
 		return new[] { (-b - Mathf.Sqrt(D)) / (2 * a), (-b + Mathf.Sqrt(D)) / (2 * a) };
 	}
