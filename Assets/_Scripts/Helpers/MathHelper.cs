@@ -10,7 +10,11 @@ public static class MathHelper {
             return Enumerable.Empty<float>().ToArray();
 		return new[] { (-b - Mathf.Sqrt(D)) / (2 * a), (-b + Mathf.Sqrt(D)) / (2 * a) };
 	}
-	public static float? CalcShootAngleInRad(float distance, float height, float speed, float gravity) {
+    public static float[] SolvePolynomialEquation(params float[] koeffs) {
+        var roots = RealPolynomialRootFinder.FindRoots(koeffs.Select(x => (double)x).ToArray());
+        return roots.Where(x => x.Imaginary == 0).Select(x => (float)x.Real).OrderBy(x => x).ToArray();
+    }
+    public static float? CalcShootAngleInRad(float distance, float height, float speed, float gravity) {
 //		var sw = new Stopwatch ();
 //		sw.Start ();
 //		for (int i = 0; i < 100; i++) {
