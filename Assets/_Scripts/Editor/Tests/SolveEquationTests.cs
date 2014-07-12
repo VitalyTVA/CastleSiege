@@ -7,6 +7,14 @@ public class SolveEquationTests {
     const float Tolerance = 0.00001f;
 
     [TestCase(1f, 2f)]
+    public void SolveQuadraticEquation_Linear(float k, float b) {
+        var roots = MathHelper.SolveQuadratic(0, k, b);
+        Assert.AreEqual(1, roots.Length);
+        Assert.AreEqual(-b / k, roots[0], Tolerance);
+    }
+
+
+    [TestCase(1f, 2f)]
     [TestCase(-1.1f, 2.2f)]
     [TestCase(10f, 10f)]
     public void SolveQuadraticEquation_RealRoots(float r0, float r1) {
