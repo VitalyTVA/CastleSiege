@@ -14,11 +14,11 @@ public class Shooter : MonoBehaviour {
 	}
 	IEnumerator<WaitForSeconds> ShootRoutine() {
 		while (true) {
-			yield return new WaitForSeconds (1);
-			Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-			var targetCollider = colliders.FirstOrDefault(x => x.gameObject.GetComponent<Target>() != null);
+            yield return new WaitForSeconds(1);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+            var targetCollider = colliders.FirstOrDefault(x => IsTargetWithRigidBody(x));
             if(targetCollider != null && targetCollider.gameObject.rigidbody != null) {
-				Transform target = targetCollider.gameObject.GetComponent<Target>().target.transform;
+                Transform target = targetCollider.gameObject.GetComponent<Target>().target.transform;
 
                 Vector3? velocity = MathHelper.CalcShootVelocity(transform.position, target.position, targetCollider.gameObject.rigidbody.velocity, speed, Physics.gravity.y);
                 if(velocity != null) {
@@ -26,6 +26,9 @@ public class Shooter : MonoBehaviour {
                     shoteeInstance.rigidbody.AddForce(velocity.Value, ForceMode.VelocityChange);
                 }
             }
-		}
-	}
+        }
+    }
+    public static bool IsTargetWithRigidBody(Collider x) {
+        return x.gameObject.GetComponent<Target>() != null && x.gameObject.rigidbody != null;
+    }
 }
