@@ -19,7 +19,7 @@ public class CalcShootAngleScript {
     }
 
     void AssertVelocity(Vector3 origination, Vector3 target, Vector3 targetVelocity, float velocity, float gravity) {
-        Vector3 calculatedVelocity = MathHelper.CalcShootVelocity(origination, target, velocity, gravity).Value;
+        Vector3 calculatedVelocity = MathHelper.CalcShootVelocity(origination, target, targetVelocity, velocity, gravity).Value;
         target = target - origination;
         Vector3 relativeVelocity = targetVelocity - calculatedVelocity;
         float time = -target.x / relativeVelocity.x;
