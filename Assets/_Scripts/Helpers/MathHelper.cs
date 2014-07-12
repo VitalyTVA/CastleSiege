@@ -30,11 +30,4 @@ public static class MathHelper {
         }
         return null;
     }
-
-    public static float Min(this Vector2 vector) {
-		return Mathf.Min(vector.x, vector.y);
-	}
-	public static float Max(this Vector2 vector) {
-		return Mathf.Max(vector.x, vector.y);
-	}
 }
