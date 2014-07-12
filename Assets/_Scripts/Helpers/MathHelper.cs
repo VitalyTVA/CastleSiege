@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Diagnostics;
 using System.Linq;
 
 public static class MathHelper {
     public static float[] SolveQuadratic(float a, float b, float c) {
+        if(a == 0)
+            return new[] { -c / b };
 		float D = b * b - 4 * a * c;
 		if (D < 0) 
             return Enumerable.Empty<float>().ToArray();
@@ -20,12 +21,14 @@ public static class MathHelper {
         return roots.Any() ? (float?)Mathf.Atan(roots.Min()) : null;
 	}
     public static Vector3? CalcShootVelocity(Vector3 origination, Vector3 target, float velocity, float gravity) {
-        Vector3 distanceVector = origination - target;
+        Vector3 distanceVector = target - origination;
         distanceVector.y = 0;
         float? angle = MathHelper.CalcShootAngleInRad(distanceVector.magnitude, origination.y - target.y, velocity, gravity);
         if(angle != null) {
-            var direction = Mathf.Deg2Rad * (Quaternion.LookRotation(target - origination).eulerAngles.y);
-            Vector3 velocityDirection = new Vector3(Mathf.Sin(direction) * Mathf.Cos(angle.Value), Mathf.Sin(angle.Value), Mathf.Cos(direction) * Mathf.Cos(angle.Value));
+            var direction = Mathf.Atan(distanceVector.z / distanceVector.x);
+            if(distanceVector.x < 0)
+                direction += Mathf.PI;
+            Vector3 velocityDirection = new Vector3(Mathf.Cos(direction) * Mathf.Cos(angle.Value), Mathf.Sin(angle.Value), Mathf.Sin(direction) * Mathf.Cos(angle.Value));
             return velocityDirection * velocity;
         }
         return null;
