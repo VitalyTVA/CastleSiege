@@ -61,7 +61,8 @@ public static class MathHelper {
         float k4 = 2 * z * v_z + 2 * y * v_y + 2 * x * v_x;
         float k5 = x * x + y * y + z * z;
         float[] roots = SolvePolynomialEquation(k1, k2, k3, k4, k5);
-        //if(!roots.A)
+        if(!roots.Any())
+            return null;
         float t = roots.First(r => r > 0);
         float b = CalcRotationAngle(x + v_x * t, z + v_z * t);
         float a = Mathf.Asin((y + v_y * t - g * t * t / 2) / (v * t));

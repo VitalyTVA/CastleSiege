@@ -17,6 +17,14 @@ public class CalcShootAngleScript {
         AssertVelocity(Vector3.zero, new Vector3(10, 5, 0), Vector3.zero, 10, 10);
         AssertVelocity(new Vector3(1, 2, 3), new Vector3(-10, 5, 2), Vector3.zero, 10, 10);
     }
+    [Test]
+    public void CantShoot() {
+        AssertCantShoot(new Vector3(1, 2, 3), new Vector3(-10, 5, 2), Vector3.zero, 1, 10);
+    }
+    [Test]
+    public void CommonCase() {
+        AssertVelocity(new Vector3(1, 2, 3), new Vector3(-10, 5, 2), new Vector3(2, 3, 1), 10, 10);
+    }
 
     void AssertVelocity(Vector3 origination, Vector3 target, Vector3 targetVelocity, float velocity, float gravity) {
         Vector3 calculatedVelocity = MathHelper.CalcShootVelocity(origination, target, targetVelocity, velocity, gravity).Value;
@@ -27,5 +35,8 @@ public class CalcShootAngleScript {
         Assert.AreEqual(0, target.z  + relativeVelocity.z * time, Tolerance);
         Assert.AreEqual(0, target.y + relativeVelocity.y * time - gravity * time * time / 2, Tolerance);
         Assert.AreEqual(velocity, calculatedVelocity.magnitude, Tolerance);
+    }
+    void AssertCantShoot(Vector3 origination, Vector3 target, Vector3 targetVelocity, float velocity, float gravity) {
+        Assert.IsNull(MathHelper.CalcShootVelocity(origination, target, targetVelocity, velocity, gravity));
     }
 }
