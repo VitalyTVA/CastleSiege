@@ -17,14 +17,19 @@ public class Shooter : MonoBehaviour {
             yield return new WaitForSeconds(1);
             Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
             var targetCollider = colliders.FirstOrDefault(x => IsTargetWithRigidBody(x));
-            if(targetCollider != null && targetCollider.gameObject.rigidbody != null) {
-                Transform target = targetCollider.gameObject.GetComponent<Target>().target.transform;
+            if(targetCollider != null) {
+                Shoot(transform.position, targetCollider.gameObject, shotee, speed);
+            }
+        }
+    }
+    public static void Shoot(Vector3 position, GameObject targetObject, GameObject shootee, float shooteeVelocity) {
+        if(targetObject.rigidbody != null) {
+            Transform target = targetObject.GetComponent<Target>().target.transform;
 
-                Vector3? velocity = MathHelper.CalcShootVelocity(transform.position, target.position, targetCollider.gameObject.rigidbody.velocity, speed, Physics.gravity.y);
-                if(velocity != null) {
-                    GameObject shoteeInstance = (GameObject)Instantiate(shotee, transform.position, Quaternion.identity);
-                    shoteeInstance.rigidbody.AddForce(velocity.Value, ForceMode.VelocityChange);
-                }
+            Vector3? velocity = MathHelper.CalcShootVelocity(position, target.position, targetObject.rigidbody.velocity, shooteeVelocity, Physics.gravity.y);
+            if(velocity != null) {
+                GameObject shoteeInstance = (GameObject)Instantiate(shootee, position, Quaternion.identity);
+                shoteeInstance.rigidbody.AddForce(velocity.Value, ForceMode.VelocityChange);
             }
         }
     }
